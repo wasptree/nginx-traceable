@@ -36,7 +36,7 @@ When working with Docker - These can either be set in the current terminal or in
 
 The variables are loaded into the nginx.conf at runtime.
 
-A Traceable TPA ( Traceable Platform Agent ) will be required to work with the included docker compose examples.
+A Traceable TPA ( Traceable Platform Agent ) and token will be required to work with the included docker compose examples.
 This is generated on the Traceable platform and requires a valid subscription.
 
 <!-- USAGE EXAMPLES -->
@@ -60,21 +60,25 @@ docker run -d \
 
 See the docker-compose.yml file in the /crAPI and /vAmPI example folders
 
+Example docker-compose snippet ( Not including the web application images ).
+
 ```
+...
+...
   nginx-traceable:
     container_name: nginx-traceable
     image: wasptree/nginx-traceable:1.18-beta1.0
     environment:
-      - BACKEND_HOST=${BACKEND_HOST}
-      - COLLECTOR_HOST=${COLLECTOR_HOST}
-      - SERVICE_NAME=${SERVICE_NAME:-"nginx"}
+      - BACKEND_HOST=127.0.0.1:8080
+      - COLLECTOR_HOST=127.0.0.1
+      - SERVICE_NAME=nginx-lab
     ports:
-      - "${LISTEN_IP:-127.0.0.1}:80:80"
+      - "127.0.0.1:80:80"
     deploy:
       resources:
         limits:
-          cpus: '0.5'     # Suitable for lab-scale reverse proxy usage
-          memory: 256M     # Minimal memory requirement for basic proxy work
+          cpus: '0.5'
+          memory: 256M
 
   traceable-agent:
     image: traceableai/traceable-agent:latest
@@ -83,21 +87,13 @@ See the docker-compose.yml file in the /crAPI and /vAmPI example folders
       - TA_ENVIRONMENT=${TA_ENVIRONMENT}
       - TA_REMOTE_ENDPOINT=${TA_REMOTE_ENDPOINT}
       - TA_REFRESH_TOKEN=${TA_REFRESH_TOKEN}
-    #ports:
-    #  - "${LISTEN_IP:-127.0.0.1}:5441:5441"
-    #  - "${LISTEN_IP:-127.0.0.1}:5443:5443"
-    #  - "${LISTEN_IP:-127.0.0.1}:5442:5442"
-    #  - "${LISTEN_IP:-127.0.0.1}:4317:4317"
-    #  - "${LISTEN_IP:-127.0.0.1}:4318:4318"
-    #  - "${LISTEN_IP:-127.0.0.1}:8181:8181"
-    #  - "${LISTEN_IP:-127.0.0.1}:14250:14250"
-    #  - "${LISTEN_IP:-127.0.0.1}:9411:9411"
     deploy:
       resources:
         limits:
           cpus: '0.5'
           memory: 512M
-
+...
+...
 ```
 
 <!-- TESTING BLOCKING RULES -->
