@@ -265,7 +265,7 @@ services:
 
   nginx-traceable:
     container_name: nginx-traceable
-    image: wasptree/nginx-traceable:1.18-beta0.6
+    image: wasptree/nginx-traceable:1.18-beta1.0
     environment:
       - BACKEND_HOST=${BACKEND_HOST}
       - COLLECTOR_HOST=${COLLECTOR_HOST}
