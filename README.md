@@ -8,6 +8,8 @@ This can be used in docker compose files alongside the traceable agent for lab t
 
 This is meant for lab & testing purposes only.
 
+*Docker and Compose are required for the examples
+
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -39,10 +41,24 @@ The variables are loaded into the nginx.conf at runtime.
 A Traceable TPA ( Traceable Platform Agent ) and token will be required to work with the included docker compose examples.
 This is generated on the Traceable platform and requires a valid subscription.
 
+<!-- Quick Start -->
+## Quick Start to run crAPI
+
+First generate an agent token on the Traceable platform.
+
+```
+git clone https://gitlab.com/wasptree/nginx-traceable
+cd nginx-traceable/crAPI
+export TA_ENVIRONMENT=crapi-lab
+export TA_REFRESH_TOKEN=oijs134dfoijsdg23_sdf8123e
+export TA_REMOTE_ENDPOINT=api.eu.traceable.ai
+docker-compose up -d 
+```
+
 <!-- USAGE EXAMPLES -->
 ## Usage Example
 
-The image can be run directly passing in environment variables as follows 
+The image can also be run directly passing in environment variables as follows 
 
 For example if you have a web application already running on port 8080 locally, this will proxy traffic on port 80 to the application.
 ```
@@ -53,47 +69,6 @@ docker run -d \
   -e COLLECTOR_HOST=localhost \
   -p 80:80 \
   wasptree/nginx-traceable:1.18-beta1.0
-```
-
-<!-- DOCKER COMPOSE USAGE EXAMPLES -->
-## docker compose Example
-
-See the docker-compose.yml file in the /crAPI and /vAmPI example folders
-
-Example docker-compose snippet ( Not including the web application images ).
-
-```
-...
-...
-  nginx-traceable:
-    container_name: nginx-traceable
-    image: wasptree/nginx-traceable:1.18-beta1.0
-    environment:
-      - BACKEND_HOST=127.0.0.1:8080
-      - COLLECTOR_HOST=127.0.0.1
-      - SERVICE_NAME=nginx-lab
-    ports:
-      - "127.0.0.1:80:80"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-
-  traceable-agent:
-    image: traceableai/traceable-agent:latest
-    container_name: traceable-agent
-    environment:
-      - TA_ENVIRONMENT=${TA_ENVIRONMENT}
-      - TA_REMOTE_ENDPOINT=${TA_REMOTE_ENDPOINT}
-      - TA_REFRESH_TOKEN=${TA_REFRESH_TOKEN}
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-...
-...
 ```
 
 <!-- TESTING BLOCKING RULES -->
