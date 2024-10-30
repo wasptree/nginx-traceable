@@ -1,0 +1,37 @@
+services:
+  vampi-vulnerable:
+    build: ./
+    container_name: vampi-vulnerable
+   #ports:
+   #  - 5002:5000
+    environment:
+      - vulnerable=1
+
+  nginx-traceable:
+    container_name: nginx-traceable
+    image: wasptree/nginx-traceable:1.18-beta1.0
+    environment:
+      - BACKEND_HOST=${BACKEND_HOST}
+      - COLLECTOR_HOST=${COLLECTOR_HOST}
+      - SERVICE_NAME=${SERVICE_NAME:-"nginx"}
+    ports:
+      - "${LISTEN_IP:-127.0.0.1}:80:80"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'     # Suitable for lab-scale reverse proxy usage
+          memory: 256M     # Minimal memory requirement for basic proxy work
+
+  traceable-agent:
+    image: traceableai/traceable-agent:latest
+    container_name: traceable-agent
+    environment:
+      - TA_ENVIRONMENT=${TA_ENVIRONMENT}
+      - TA_REMOTE_ENDPOINT=${TA_REMOTE_ENDPOINT}
+      - TA_REFRESH_TOKEN=${TA_REFRESH_TOKEN}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
